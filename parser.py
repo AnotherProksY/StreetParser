@@ -72,7 +72,7 @@ def street_parser(style="Raw"):
 
     elif style.lower() == "format":
         for code, count in districts_count.items():
-            print(f'Название округа: {code} -> количество вызовов: {count}\n')
+            print(f'Название округа: {code} -> количество улиц: {count}')
 
 
 if __name__ == "__main__":
