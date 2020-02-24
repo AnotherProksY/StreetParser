@@ -23,3 +23,11 @@
   ```bash
   python3 parser.py <filename> <raw|format>
   ```
+
+
+
+## Пример вывода
+
+<p align="center">
+  <img src="images/Screenshot 2020-02-24 at 20.33.58.png">
+</p>
