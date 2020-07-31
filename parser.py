@@ -11,7 +11,7 @@ DISTRICTS_FILES = {
     "ЮЗАО": "UZAO.txt",
     "ЗАО": "ZAO.txt",
     "СЗАО": "SZAO.txt",
-    "ЗЕЛАО": "ZELAO.txt"
+    "ЗЕЛАО": "ZELAO.txt",
 }
 
 STREET_LIST_FILE = str(argv[1])
@@ -27,13 +27,13 @@ districts_count = {
     "ЮЗАО": 0,
     "ЗАО": 0,
     "СЗАО": 0,
-    "ЗЕЛАО": 0
+    "ЗЕЛАО": 0,
 }
 
 
 def read(filename):
     """Open file and read each line."""
-    with open(filename, 'r') as f:
+    with open(filename, "r") as f:
         document = f.readlines()
         return document
 
@@ -60,7 +60,7 @@ def street_parser(style="Raw"):
         district_streets = read(filename)
 
         for street in streets:
-            street = street.split(',')
+            street = street.split(",")
 
             for district_street in district_streets:
                 if street[0] in district_street:
@@ -72,7 +72,7 @@ def street_parser(style="Raw"):
 
     elif style.lower() == "format":
         for code, count in districts_count.items():
-            print(f'Название округа: {code} -> количество улиц: {count}')
+            print(f"Название округа: {code} -> количество улиц: {count}")
 
 
 if __name__ == "__main__":
