@@ -1,6 +1,7 @@
 """Script for mapping streets and their districts."""
 from sys import argv
 
+
 DISTRICTS_FILES = {
     "ЦАО": "CAO.txt",
     "САО": "SAO.txt",
@@ -38,30 +39,43 @@ def read(filename):
         return document
 
 
-def street_parser(style="Raw"):
-    """
-    1. Iterate through DISTRICTS_FILES dictionary.
+def street_parser(style="raw"):
+    """Iterate through csv file and pre-defined data dictionary.
 
-       * Obtain "code : filename"
-       * Assign return value from read() -> (list of file lines)
+    Args:
+      style: String that defines 'print()' style.
 
-    2. Iterate through streets file.
+    Returns:
+      None.
 
-       * reassign value to street variable -> (list of [street_name, count])
-
-    3. Iterate through district_streets -> (each line of DISTRICTS_FILES.filename).
-
-       * if line contains streets.street.name,
-            then append street.count value to districts_count dictionary
+    Styles preview:
+    >>> street_parser()
+    {'ЦАО': 197, 'САО': 38, 'СВАО': 37, 'ВАО': 11, ...}
+    >>> street_parser(style="raw")
+    {'ЦАО': 197, 'САО': 38, 'СВАО': 37, 'ВАО': 11, ...}
+    >>> street_parser(style="format")
+    Название округа: ЦАО -> количество улиц: 197
+    Название округа: САО -> количество улиц: 38
+    ...
     """
     streets = read(STREET_LIST_FILE)
 
+    # Iterate through DISTRICTS_FILES dictionary.
+    #  * Obtain "code : filename"
+    #  * Assign return value from read() -> (list of file lines)
     for code, filename in DISTRICTS_FILES.items():
         district_streets = read(filename)
 
+        # Iterate through streets file.
+        #  * reassign value to street variable ->
+        #      (list of [street_name, count])
         for street in streets:
             street = street.split(",")
 
+            # Iterate through district_streets ->
+            #   (each line of DISTRICTS_FILES.filename).
+            #  * if line contains streets.street.name,
+            #      then append street.count value to districts_count dictionary
             for district_street in district_streets:
                 if street[0] in district_street:
                     districts_count[code] += int(street[1])
