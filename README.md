@@ -29,5 +29,5 @@
 ## Пример вывода
 
 <p align="center">
-  <img src="images/Screenshot 2020-02-24 at 20.33.58.png">
+  <img src="images/Preview.png">
 </p>
