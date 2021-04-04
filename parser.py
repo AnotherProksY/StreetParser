@@ -1,46 +1,40 @@
 """Script for mapping streets and their districts."""
-from sys import argv
+
+import sys
+import json
+import csv
 
 
-DISTRICTS_FILES = {
-    "ЦАО": "CAO.txt",
-    "САО": "SAO.txt",
-    "СВАО": "SVAO.txt",
-    "ВАО": "VAO.txt",
-    "ЮВАО": "UVAO.txt",
-    "ЮАО": "UAO.txt",
-    "ЮЗАО": "UZAO.txt",
-    "ЗАО": "ZAO.txt",
-    "СЗАО": "SZAO.txt",
-    "ЗЕЛАО": "ZELAO.txt",
-}
+class FileObject:
+    """Get data from file."""
 
-STREET_LIST_FILE = str(argv[1])
+    def __init__(self, filename):
+        """Specify filename to process."""
+        self.filename = filename
+        self.__load()
 
+    def __load(self):
+        """Load 'JSON/CSV' file."""
+        with open(self.filename, 'r', encoding='utf-8') as file:
+            # Load JSON
+            if self.filename.endswith('.json'):
+                self.data = json.load(file)
 
-districts_count = {
-    "ЦАО": 0,
-    "САО": 0,
-    "СВАО": 0,
-    "ВАО": 0,
-    "ЮВАО": 0,
-    "ЮАО": 0,
-    "ЮЗАО": 0,
-    "ЗАО": 0,
-    "СЗАО": 0,
-    "ЗЕЛАО": 0,
-}
+            # Load CSV
+            elif self.filename.endswith('.csv'):
+                self.data = []
 
+                # Assign reader object to temporiry variable
+                temp = csv.reader(file)
+                for row in temp:
+                    self.data.append(row)
 
-def read(filename):
-    """Open file and read each line."""
-    with open(filename, "r") as f:
-        document = f.readlines()
-        return document
+                # Get rid of 'CSV' header
+                del self.data[0]
 
 
 def street_parser(style="raw"):
-    """Iterate through csv file and pre-defined data dictionary.
+    """Iterate through CSV file and compare to JSON.
 
     Args:
       style: String that defines 'print()' style.
@@ -58,27 +52,26 @@ def street_parser(style="raw"):
     Название округа: САО -> количество улиц: 38
     ...
     """
-    streets = read(STREET_LIST_FILE)
+    # Iterate through STREETS CSV.
+    #  * Get street 'name' and 'count' value
+    #  * Get first 'letter' from street name
+    for street, count in STREETS.data:
+        f_letter = street[:1]
 
-    # Iterate through DISTRICTS_FILES dictionary.
-    #  * Obtain "code : filename"
-    #  * Assign return value from read() -> (list of file lines)
-    for code, filename in DISTRICTS_FILES.items():
-        district_streets = read(filename)
+        # Iterate through DISTRICTS JSON.
+        #  * Obtain districts 'code'
+        #  * Get data from district 'code'
+        for district in DISTRICTS.data:
+            district_data = DISTRICTS.data[district]
 
-        # Iterate through streets file.
-        #  * reassign value to street variable ->
-        #      (list of [street_name, count])
-        for street in streets:
-            street = street.split(",")
+            # If district contains streets with the same 'letter'.
+            #  * True  -> check each street; write to 'districts_count'
+            #  * False -> go to next district 'code'
+            if district_data.get(f_letter):
+                for dis_street in district_data[f_letter]:
+                    if street in dis_street:
+                        districts_count[district] += int(count)
 
-            # Iterate through district_streets ->
-            #   (each line of DISTRICTS_FILES.filename).
-            #  * if line contains streets.street.name,
-            #      then append street.count value to districts_count dictionary
-            for district_street in district_streets:
-                if street[0] in district_street:
-                    districts_count[code] += int(street[1])
 
     # After iterating and parsing, print dictionary values
     if style.lower() == "raw":
@@ -89,5 +82,24 @@ def street_parser(style="raw"):
             print(f"Название округа: {code} -> количество улиц: {count}")
 
 
+DISTRICTS = FileObject("dataset.json")
+
+STREETS = FileObject(str(sys.argv[1]))
+
+
+districts_count = {
+    "ЦАО": 0,
+    "САО": 0,
+    "СВАО": 0,
+    "ВАО": 0,
+    "ЮВАО": 0,
+    "ЮАО": 0,
+    "ЮЗАО": 0,
+    "ЗАО": 0,
+    "СЗАО": 0,
+    "ЗЕЛАО": 0,
+}
+
+
 if __name__ == "__main__":
-    street_parser(str(argv[2]))
+    street_parser(str(sys.argv[2]))
