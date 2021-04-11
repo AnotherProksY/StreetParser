@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Script for mapping streets and their districts."""
 
 import sys
@@ -71,7 +72,6 @@ def street_parser(style="raw"):
                 for dis_street in district_data[f_letter]:
                     if street in dis_street:
                         districts_count[district] += int(count)
-
 
     # After iterating and parsing, print dictionary values
     if style.lower() == "raw":
