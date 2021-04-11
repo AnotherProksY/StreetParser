@@ -1,3 +1,3 @@
 [flake8]
 ignore = F401, F402, E501, W503
-exclude = .git, .advisorenv, __pycache__
+exclude = .git, .parservenv, __pycache__
